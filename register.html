@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Registration</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      form {
+        display: grid;
+        gap: 15px;
+      }
+
+      .form-group {
+        display: grid;
+        gap: 5px;
+      }
+
+      label {
+        font-weight: bold;
+      }
+
+      input,
+      button {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      p {
+        margin-top: 10px;
+        text-align: center;
+        color: #007bff;
+      }
+
+      .google-signin-btn {
+        background-color: #db4437;
+        color: white;
+      }
+
+      .facebook-signin-btn {
+        background-color: #4267b2;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>User Registration</h2>
+      <form id="registrationForm">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" required />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" required />
+        </div>
+        <button type="submit">Register</button>
+      </form>
+      <button id="googleSignInBtn" class="google-signin-btn">
+        Sign in with Google
+      </button>
+      <button id="facebookSignInBtn" class="facebook-signin-btn">
+        Sign in with Facebook
+      </button>
+      <p id="registrationMessage"></p>
+    </div>
+
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyC3V7elZ6xMhZuOqjGabTP2Q_psz4vwxP4",
+        authDomain: "fakestoreapi-d0736.firebaseapp.com",
+        projectId: "fakestoreapi-d0736",
+        storageBucket: "fakestoreapi-d0736.appspot.com",
+        messagingSenderId: "677778924924",
+        appId: "1:677778924924:web:8f96b26b824f47b77fb0f9",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      const registrationForm = document.getElementById("registrationForm");
+      const registrationMessage = document.getElementById(
+        "registrationMessage"
+      );
+
+      registrationForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const firstName = registrationForm["firstName"].value;
+        const lastName = registrationForm["lastName"].value;
+        const email = registrationForm["email"].value;
+        const password = registrationForm["password"].value;
+        const age = parseInt(registrationForm["age"].value);
+
+        try {
+          const userCredential = await firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password);
+          const user = userCredential.user;
+
+          // Additional data you might want to store in Firestore or elsewhere
+          const userData = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            age: age,
+          };
+
+          // Example of storing user data in Firestore (adjust as needed)
+          await firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .set(userData);
+
+          registrationMessage.textContent = "Registration successful!";
+          setTimeout(() => {
+            window.location.href = "/"; // Redirect to homepage after registration
+          }, 2000); // Redirect after 2 seconds
+        } catch (error) {
+          registrationMessage.textContent = error.message;
+        }
+      });
+
+      // Google Sign-In
+      const googleSignInBtn = document.getElementById("googleSignInBtn");
+
+      googleSignInBtn.addEventListener("click", async () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        try {
+          const result = await firebase.auth().signInWithPopup(provider);
+          const user = result.user;
+
+          // Additional data you might want to store in Firestore or elsewhere
+          const userData = {
+            firstName: user.displayName.split(" ")[0],
+            lastName: user.displayName.split(" ")[1],
+            email: user.email,
+            age: 0, // Default age or prompt user to provide age
+          };
+
+          // Example of storing user data in Firestore (adjust as needed)
+          await firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .set(userData);
+
+          registrationMessage.textContent = "Google sign-in successful!";
+          setTimeout(() => {
+            window.location.href = "/"; // Redirect to homepage after registration
+          }, 2000); // Redirect after 2 seconds
+        } catch (error) {
+          registrationMessage.textContent = error.message;
+        }
+      });
+
+      // Facebook Sign-In
+      const facebookSignInBtn = document.getElementById("facebookSignInBtn");
+
+      facebookSignInBtn.addEventListener("click", async () => {
+        const provider = new firebase.auth.FacebookAuthProvider();
+
+        try {
+          const result = await firebase.auth().signInWithPopup(provider);
+          const user = result.user;
+
+          // Additional data you might want to store in Firestore or elsewhere
+          const userData = {
+            firstName: user.displayName.split(" ")[0],
+            lastName: user.displayName.split(" ")[1],
+            email: user.email,
+            age: 0, // Default age or prompt user to provide age
+          };
+
+          // Example of storing user data in Firestore (adjust as needed)
+          await firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .set(userData);
+
+          registrationMessage.textContent = "Facebook sign-in successful!";
+          setTimeout(() => {
+            window.location.href = "/"; // Redirect to homepage after registration
+          }, 2000); // Redirect after 2 seconds
+        } catch (error) {
+          registrationMessage.textContent = error.message;
+        }
+      });
+    </script>
+  </body>
+</html>

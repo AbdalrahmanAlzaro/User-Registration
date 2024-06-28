@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fake Store API</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Fake Store</h1>
+      <button id="logoutButton">Logout</button>
+    </header>
+    <main>
+      <section id="products"></section>
+      <section id="product-form">
+        <h2>Add New Product</h2>
+        <form id="new-product-form">
+          <input type="text" id="product-title" placeholder="Title" required />
+          <input
+            type="number"
+            id="product-price"
+            placeholder="Price"
+            required
+          />
+          <textarea
+            id="product-description"
+            placeholder="Description"
+            required
+          ></textarea>
+          <input
+            type="text"
+            id="product-image"
+            placeholder="Image URL"
+            required
+          />
+          <button type="submit">Add Product</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2024 Fake Store</p>
+    </footer>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+      import { getDatabase } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyC3V7elZ...psz4vwxP4",
+        authDomain: "fakestoreapi-d0736.firebaseapp.com",
+        projectId: "fakestoreapi-d0736",
+        storageBucket: "fakestoreapi-d0736.appspot.com",
+        messagingSenderId: "677778924924",
+        appId: "1:677778924924:web:8f96b26b824f47b77fb0f9",
+        measurementId: "G-S4QNQN1Z8K",
+        databaseURL: "https://fakestoreapi-d0736-default-rtdb.firebaseio.com",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      window.firebaseApp = app;
+      window.firebaseDb = db;
+    </script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

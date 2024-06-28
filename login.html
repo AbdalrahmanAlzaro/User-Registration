@@ -1,0 +1,118 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <style>
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+      h2 {
+        text-align: center;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+      label {
+        margin-bottom: 5px;
+      }
+      input,
+      button {
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 16px;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Login to Your Account</h2>
+      <form id="loginForm">
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p id="loginError" class="error-message"></p>
+      <p>Don't have an account? <a href="./register.html">Sign Up</a></p>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyC3V7elZ6xMhZuOqjGabTP2Q_psz4vwxP4",
+        authDomain: "fakestoreapi-d0736.firebaseapp.com",
+        projectId: "fakestoreapi-d0736",
+        storageBucket: "fakestoreapi-d0736.appspot.com",
+        messagingSenderId: "677778924924",
+        appId: "1:677778924924:web:8f96b26b824f47b77fb0f9",
+      };
+
+      const firebaseApp = initializeApp(firebaseConfig);
+      const firebaseAuth = getAuth(firebaseApp);
+
+      const loginForm = document.getElementById("loginForm");
+      const loginError = document.getElementById("loginError");
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = loginForm.email.value;
+        const password = loginForm.password.value;
+
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            firebaseAuth,
+            email,
+            password
+          );
+          loginForm.reset();
+          window.location.href = "/index.html";
+        } catch (error) {
+          loginError.textContent = error.message;
+        }
+      });
+    </script>
+  </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    sfsbzfb
+  </body>
+</html>
