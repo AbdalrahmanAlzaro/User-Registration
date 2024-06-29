@@ -132,7 +132,7 @@
 
           loginMessage.textContent = `Welcome back, ${user.email}!`;
           setTimeout(() => {
-            window.location.href = "/User-Registration";
+            window.location.href = "/";
           }, 1000);
         } catch (error) {
           loginMessage.textContent = error.message;
@@ -150,7 +150,7 @@
 
           loginMessage.textContent = "Google sign-in successful!";
           setTimeout(() => {
-            window.location.href = "/User-Registration";
+            window.location.href = "/";
           }, 1000);
         } catch (error) {
           loginMessage.textContent = error.message;
@@ -168,7 +168,7 @@
 
           loginMessage.textContent = "Facebook sign-in successful!";
           setTimeout(() => {
-            window.location.href = "/User-Registration";
+            window.location.href = "/";
           }, 1000);
         } catch (error) {
           loginMessage.textContent = error.message;
