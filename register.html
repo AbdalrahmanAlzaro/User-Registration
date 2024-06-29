@@ -146,8 +146,6 @@
             .auth()
             .createUserWithEmailAndPassword(email, password);
           const user = userCredential.user;
-
-          // Additional data you might want to store in Firestore or elsewhere
           const userData = {
             firstName: firstName,
             lastName: lastName,
@@ -155,7 +153,6 @@
             age: age,
           };
 
-          // Example of storing user data in Firestore (adjust as needed)
           await firebase
             .firestore()
             .collection("users")
@@ -164,14 +161,13 @@
 
           registrationMessage.textContent = "Registration successful!";
           setTimeout(() => {
-            window.location.href = "/"; // Redirect to homepage after registration
-          }, 2000); // Redirect after 2 seconds
+            window.location.href = "/";
+          }, 1000);
         } catch (error) {
           registrationMessage.textContent = error.message;
         }
       });
 
-      // Google Sign-In
       const googleSignInBtn = document.getElementById("googleSignInBtn");
 
       googleSignInBtn.addEventListener("click", async () => {
@@ -181,15 +177,13 @@
           const result = await firebase.auth().signInWithPopup(provider);
           const user = result.user;
 
-          // Additional data you might want to store in Firestore or elsewhere
           const userData = {
             firstName: user.displayName.split(" ")[0],
             lastName: user.displayName.split(" ")[1],
             email: user.email,
-            age: 0, // Default age or prompt user to provide age
+            age: 0,
           };
 
-          // Example of storing user data in Firestore (adjust as needed)
           await firebase
             .firestore()
             .collection("users")
@@ -198,14 +192,13 @@
 
           registrationMessage.textContent = "Google sign-in successful!";
           setTimeout(() => {
-            window.location.href = "/"; // Redirect to homepage after registration
-          }, 2000); // Redirect after 2 seconds
+            window.location.href = "/";
+          }, 1000);
         } catch (error) {
           registrationMessage.textContent = error.message;
         }
       });
 
-      // Facebook Sign-In
       const facebookSignInBtn = document.getElementById("facebookSignInBtn");
 
       facebookSignInBtn.addEventListener("click", async () => {
@@ -215,15 +208,13 @@
           const result = await firebase.auth().signInWithPopup(provider);
           const user = result.user;
 
-          // Additional data you might want to store in Firestore or elsewhere
           const userData = {
             firstName: user.displayName.split(" ")[0],
             lastName: user.displayName.split(" ")[1],
             email: user.email,
-            age: 0, // Default age or prompt user to provide age
+            age: 0,
           };
 
-          // Example of storing user data in Firestore (adjust as needed)
           await firebase
             .firestore()
             .collection("users")
@@ -232,8 +223,8 @@
 
           registrationMessage.textContent = "Facebook sign-in successful!";
           setTimeout(() => {
-            window.location.href = "/"; // Redirect to homepage after registration
-          }, 2000); // Redirect after 2 seconds
+            window.location.href = "/";
+          }, 1000);
         } catch (error) {
           registrationMessage.textContent = error.message;
         }

@@ -1,75 +1,108 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
+    <title>User Login</title>
     <style>
-      .container {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-      }
-      h2 {
-        text-align: center;
-      }
-      form {
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
       }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      form {
+        display: grid;
+        gap: 15px;
+      }
+
+      .form-group {
+        display: grid;
+        gap: 5px;
+      }
+
       label {
-        margin-bottom: 5px;
+        font-weight: bold;
       }
+
       input,
       button {
-        margin-bottom: 10px;
         padding: 10px;
         font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
       }
+
       button {
         background-color: #007bff;
         color: white;
-        border: none;
         cursor: pointer;
+        transition: background-color 0.3s ease;
       }
+
       button:hover {
         background-color: #0056b3;
       }
-      .error-message {
-        color: red;
-        font-size: 14px;
+
+      p {
         margin-top: 10px;
+        text-align: center;
+        color: #007bff;
+      }
+
+      .google-signin-btn {
+        background-color: #db4437;
+        color: white;
+      }
+
+      .facebook-signin-btn {
+        background-color: #4267b2;
+        color: white;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h2>Login to Your Account</h2>
+      <h2>User Login</h2>
       <form id="loginForm">
-        <div>
+        <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" required />
         </div>
-        <div>
+        <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" required />
         </div>
         <button type="submit">Login</button>
       </form>
-      <p id="loginError" class="error-message"></p>
-      <p>Don't have an account? <a href="./register.html">Sign Up</a></p>
+      <button id="googleSignInBtn" class="google-signin-btn">
+        Sign in with Google
+      </button>
+      <button id="facebookSignInBtn" class="facebook-signin-btn">
+        Sign in with Facebook
+      </button>
+      <p id="loginMessage"></p>
     </div>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
-      import {
-        getAuth,
-        signInWithEmailAndPassword,
-      } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
-
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+    <script>
+      // Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyC3V7elZ6xMhZuOqjGabTP2Q_psz4vwxP4",
         authDomain: "fakestoreapi-d0736.firebaseapp.com",
@@ -79,40 +112,68 @@
         appId: "1:677778924924:web:8f96b26b824f47b77fb0f9",
       };
 
-      const firebaseApp = initializeApp(firebaseConfig);
-      const firebaseAuth = getAuth(firebaseApp);
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
 
       const loginForm = document.getElementById("loginForm");
-      const loginError = document.getElementById("loginError");
+      const loginMessage = document.getElementById("loginMessage");
 
       loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const email = loginForm.email.value;
-        const password = loginForm.password.value;
+
+        const email = loginForm["email"].value;
+        const password = loginForm["password"].value;
 
         try {
-          const userCredential = await signInWithEmailAndPassword(
-            firebaseAuth,
-            email,
-            password
-          );
-          loginForm.reset();
-          window.location.href = "/index.html";
+          const userCredential = await firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password);
+          const user = userCredential.user;
+
+          loginMessage.textContent = `Welcome back, ${user.email}!`;
+          setTimeout(() => {
+            window.location.href = "/User-Registration";
+          }, 1000);
         } catch (error) {
-          loginError.textContent = error.message;
+          loginMessage.textContent = error.message;
+        }
+      });
+
+      const googleSignInBtn = document.getElementById("googleSignInBtn");
+
+      googleSignInBtn.addEventListener("click", async () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        try {
+          const result = await firebase.auth().signInWithPopup(provider);
+          const user = result.user;
+
+          loginMessage.textContent = "Google sign-in successful!";
+          setTimeout(() => {
+            window.location.href = "/User-Registration";
+          }, 1000);
+        } catch (error) {
+          loginMessage.textContent = error.message;
+        }
+      });
+
+      const facebookSignInBtn = document.getElementById("facebookSignInBtn");
+
+      facebookSignInBtn.addEventListener("click", async () => {
+        const provider = new firebase.auth.FacebookAuthProvider();
+
+        try {
+          const result = await firebase.auth().signInWithPopup(provider);
+          const user = result.user;
+
+          loginMessage.textContent = "Facebook sign-in successful!";
+          setTimeout(() => {
+            window.location.href = "/User-Registration";
+          }, 1000);
+        } catch (error) {
+          loginMessage.textContent = error.message;
         }
       });
     </script>
-  </body>
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    sfsbzfb
   </body>
 </html>
